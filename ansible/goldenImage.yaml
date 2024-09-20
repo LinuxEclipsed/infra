@@ -1,0 +1,61 @@
+ - name: provision RHEL Servers
+   hosts: all
+
+   tasks:
+      - name: DNF update
+        dnf:
+          name: "*"
+          state: latest
+
+      - name: Install snmpd
+        dnf:
+          name:
+            - net-snmp
+            - qemu-guest-agent
+          state: latest
+
+      - name: Fix SSH keys
+        file:
+          path: '{{ item }}'
+          state: absent
+        with_items:
+          - '/etc/ssh/ssh_host_dsa_key'
+          - '/etc/ssh/ssh_host_dsa_key.pub'
+          - '/etc/ssh/ssh_host_ecdsa_key'
+          - '/etc/ssh/ssh_host_ecdsa_key.pub'
+          - '/etc/ssh/ssh_host_ed25519_key'
+          - '/etc/ssh/ssh_host_ed25519_key.pub'
+          - '/etc/ssh/ssh_host_rsa_key'
+          - '/etc/ssh/ssh_host_rsa_key.pub'
+
+      - ansible.builtin.shell:
+          cmd: 'ssh-keygen -A && restorecon /etc/ssh/ssh_host_*'
+
+      - name: Setup snmpd
+        lineinfile:
+          path: /etc/snmp/snmpd.conf
+          regexp: 'syslocation Unknown'
+          line: 'sysLocation    Truckee, CA'
+          state: present
+
+      - name: setup snmpd
+        lineinfile:
+          path: /etc/snmp/snmpd.conf
+          regexp: 'syscontact Root <root@localhost>'
+          line: 'sysContact     Kory <kory@mail.korys.lan>'
+          state: present
+
+      - name: Setup snmpd
+        lineinfile:
+          path: /etc/snmp/snmpd.conf
+          line: agentadress udp:161 \n
+                rocommunity kory@home
+
+      - name: Start Service
+        ansible.builtin.systemd:
+          name: "{{ item }}"
+          enabled: true
+          state: started
+        with_items:
+            - snmpd
+            - qemu-guest-agent

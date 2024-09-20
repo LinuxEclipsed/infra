@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellystat
+spec:
+  rules:
+    - host: jellystat.local.koryalbert.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            # Redirect traffic to service on port 80
+            backend:
+              service:
+                name: jellystat
+                port:
+                  number: 3000

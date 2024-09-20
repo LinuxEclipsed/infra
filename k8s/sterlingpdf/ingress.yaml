@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sterlingpdf
+  annotations:
+    kubernetes.io/ingress.className: traefik
+spec:
+  rules:
+  - host: pdf.local.koryalbert.net
+    http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sterlingpdf
+                port:
+                  number: 8080

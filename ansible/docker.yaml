@@ -1,0 +1,26 @@
+  - name: Install Docker RHEL Servers
+    hosts: all
+
+    tasks:
+      - name: Yum install
+        dnf:
+          name:
+            - yum-utils
+          state: latest
+
+      - name: Install repo
+        command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+      - name: Docker Install
+        dnf:
+          name:
+            - docker-ce
+            - docker-ce-cli
+            - containerd.io
+            - docker-compose-plugin
+
+      - name: Start/Enable Docker
+        service:
+           name: docker
+           enabled: yes
+           state: started

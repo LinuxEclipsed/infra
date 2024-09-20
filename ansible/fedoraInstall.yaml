@@ -1,0 +1,50 @@
+  - name: Fedora first install
+    hosts: all
+    
+    tasks:
+      - name: Install Keys
+        dnf:
+          name:
+            - distribution-gpg-keys
+          state: present
+      - rpm_key:
+          state: present
+          key: /usr/share/distribution-gpg-keys/rpmfusion/RPM-GPG-KEY-rpmfusion-free-fedora-{{ansible_distribution_major_version}}
+      - name: Install k8s repo
+        shell: cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+              [kubernetes]
+              name=Kubernetes
+              baseurl=https://pkgs.k8s.io/core:/stable:/v1.31/rpm/
+              enabled=1
+              gpgcheck=1
+              gpgkey=https://pkgs.k8s.io/core:/stable:/v1.31/rpm/repodata/repomd.xml.key
+              EOF
+      - name: Enable the RPM Fusion repository
+        dnf:
+          name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
+          state: present
+      - name:  Media package install
+        dnf:
+          name:
+           - "@multimedia"
+           - "@sound-and-video"
+           - gimp
+           - vlc
+           - thunderbird
+           - inkscape
+           - nmap
+           - ansible
+           - podman
+           - kubectl
+           - "*"
+          state: latest
+          allowerasing: true
+      - name: gstreamer install
+        shell: dnf install gstreamer1-plugins-{bad-\*,good-\*,base} gstreamer1-libav gstreamer1-plugin-openh264 --exclude=gstreamer1-plugins-bad-free-devel
+      - name: Flatpak install
+        community.general.flatpak:
+            name:
+            - com.github.iwalton3.jellyfin-media-player
+            - md.obsidian.Obsidian
+            - org.telegram.desktop 
+            - org.kde.kdenlive

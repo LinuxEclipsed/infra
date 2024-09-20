@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ghost-db
+  namespace: ghost-dmz
+  labels:
+    app: ghost-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: mysql
+          image: mysql:8
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ghost
+                  key: mysql-password
+          ports:
+            - containerPort: 3306
+              name: mysql
+#          livenessProbe:
+#            initialDelaySeconds: 20
+#            periodSeconds: 5
+#            # One second longer than command timeout should prevent generation of zombie processes.
+#            timeoutSeconds: 6
+#            successThreshold: 1
+#            failureThreshold: 5
+#          readinessProbe:
+#            initialDelaySeconds: 20
+#            periodSeconds: 5
+#            timeoutSeconds: 2
+#            successThreshold: 1
+#            failureThreshold: 5
+#            exec:
+#              command:
+#                - sh
+#                - -c
+#                - /health/ping_readiness_local.sh 1
+          resources:
+            limits: {}
+            requests:
+              cpu: 20m
+              memory: 600Mi
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: ghost-db-pvc

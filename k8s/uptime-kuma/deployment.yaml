@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: uptime-kuma
+spec:
+  selector:
+    matchLabels:
+      app: uptime-kuma
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: uptime-kuma
+    spec:
+      containers:
+      - name: uptime-kuma
+        image: louislam/uptime-kuma:latest
+        env:
+            - name: TZ
+              value: "America/Los_Angeles"
+        volumeMounts:
+            - mountPath: /app/data
+              name: uptime-kuma-data
+        ports:
+        - containerPort: 3001
+      volumes:
+        - name: uptime-kuma-data
+          persistentVolumeClaim:
+            claimName: uptime-kuma-data-pvc

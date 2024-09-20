@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sterlingpdf
+spec:
+  selector:
+    matchLabels:
+      app: sterlingpdf
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: sterlingpdf
+    spec:
+      containers:
+      - name: sterlingpdf
+        image: frooodle/s-pdf:latest
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "200Mi"
+          limits:
+            cpu: "700m"
+            memory: "300Mi"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 10
+          failureThreshold: 3
+        env:
+            - name: DOCKER_ENABLE_SECURITY
+              value: "false"
+            - name: NSTALL_BOOK_AND_ADVANCED_HTML_OPS
+              value: "false"
+        volumeMounts:
+            - mountPath: /configs
+              name: sterlingpdf-data
+        ports:
+        - containerPort: 8080
+      volumes:
+        - name: sterlingpdf-data
+          persistentVolumeClaim:
+            claimName: sterlingpdf-data-pvc

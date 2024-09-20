@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: auburntech
+  namespace: auburntech-dmz
+  annotations:
+    kubernetes.io/ingress.className: traefik
+spec:
+  tls:
+  - hosts:
+    - auburntechconsulting.com
+    secretName: auburntech-com
+  ingressClassName: traefik
+  rules:
+  - host: auburntechconsulting.com
+    http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: auburntech
+                port:
+                  number: 8080

@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ghost-app-data
+  namespace: ghost-dmz
+spec:
+  capacity:
+    storage: 100Mi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  local:
+    path: /mnt/k8s/ghost/app
+  nodeAffinity:
+    required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/os
+            operator: In
+            values:
+            - linux
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ghost-db-data
+  namespace: ghost-dmz
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  local:
+    path: /mnt/k8s/ghost/db
+  nodeAffinity:
+    required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/os
+            operator: In
+            values:
+            - linux
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ghost-app-pvc
+  namespace: ghost-dmz
+spec:
+  storageClassName: local-path
+  volumeName: ghost-app-data
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ghost-db-pvc
+  namespace: ghost-dmz
+spec:
+  storageClassName: local-path
+  volumeName: ghost-db-data
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellystat
+spec:
+  selector:
+    matchLabels:
+      app: jellystat
+  template:
+    metadata:
+      labels:
+        app: jellystat
+    spec:
+      containers:
+        - name: jellystat
+          image: cyfershepard/jellystat:1.1.0
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "200Mi"
+            limits:
+              cpu: "700m"
+              memory: "300Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 10
+            failureThreshold: 3
+          ports:
+            - containerPort: 3000
+          env:
+            - name: POSTGRES_DB
+              value: "jfstat"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "mypassword"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_IP
+              value: "jellystat-db.prod.svc.cluster.local"
+            - name: JWT_SECRET
+              value: "my-secret-jwt-key"
+          volumeMounts:
+            - mountPath: /app/backend/backup-data
+              name: jellystat-data
+      volumes:
+        - name: jellystat-data
+          persistentVolumeClaim:
+            claimName: jellystat-data-pvc
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jellystat-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellystat-db
+  template:
+    metadata:
+      labels:
+        app: jellystat-db
+    spec:
+      containers:
+        - name: jellystat-db
+          image: postgres:15-alpine
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "100Mi"
+            limits:
+              cpu: "700m"
+              memory: "300Mi"
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "mypassword"
+            - name: POSTGRES_DB
+              value: jfstat
+            - name: POSTGRES_USER
+              value: postgres
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: jellystat-data
+      volumes:
+        - name: jellystat-data
+          persistentVolumeClaim:
+            claimName: jellystat-data-pvc

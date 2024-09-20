@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ghost
+  name: ghost
+  namespace: ghost-dmz
+spec:
+  selector:
+    matchLabels:
+      app: ghost
+  template:
+    metadata:
+      labels:
+        app: ghost
+    spec:
+      containers:
+        - name: ghost
+          image: ghost:5.63
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 2368
+              name: http
+              protocol: TCP
+          env:
+            - name: database__client
+              value: mysql
+            - name: database__connection__host
+              value: ghost-db
+            - name: database__connection__user
+              valueFrom:
+                secretKeyRef:
+                  name: ghost
+                  key: mysql-user
+            - name: database__connection__password
+              valueFrom:
+                secretKeyRef:
+                  name: ghost
+                  key: mysql-password
+            - name: database__connection__database
+              value: ghost
+            - name: url
+              valueFrom:
+                secretKeyRef:
+                  name: ghost
+                  key: ghost-url
+#          readinessProbe:
+#            failureThreshold: 3
+#            httpGet:
+#              path: /
+#              port: 2368
+#              scheme: HTTP
+#            initialDelaySeconds: 30
+#            periodSeconds: 30
+#            successThreshold: 1
+#            timeoutSeconds: 2
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 2368
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 50m
+              memory: 120Mi
+            limits:
+              memory: 250Mi
+          volumeMounts:
+            - mountPath: /var/lib/ghost/content
+              name: ghost-data
+      volumes:
+        - name: ghost-data
+          persistentVolumeClaim:
+            claimName: ghost-app-pvc

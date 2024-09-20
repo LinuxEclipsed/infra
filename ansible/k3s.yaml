@@ -1,0 +1,96 @@
+ - name: provision k3s Servers
+   hosts: all
+
+   tasks:
+      - name: DNF update
+        dnf:
+          name: "*"
+          state: latest
+
+      - name: Install packages
+        dnf:
+          name:
+            - net-snmp
+            - qemu-guest-agent
+            - nfs-utils
+          state: latest
+
+      - name: Setup snmpd
+        lineinfile:
+          path: /etc/snmp/snmpd.conf
+          regexp: 'syslocation Unknown'
+          line: 'sysLocation    Truckee, CA'
+          state: present
+
+      - name: setup snmpd
+        lineinfile:
+          path: /etc/snmp/snmpd.conf
+          regexp: 'syscontact Root <root@localhost>'
+          line: 'sysContact     Kory <kory@mail.korys.lan>'
+          state: present
+
+      - name: Setup snmpd
+        lineinfile:
+          path: /etc/snmp/snmpd.conf
+          line: agentadress udp:161 \n
+                rocommunity kory@home
+
+      - name: Start Service
+        ansible.builtin.systemd:
+          name: "{{ item }}"
+          enabled: true
+          state: started
+        with_items:
+            - snmpd
+            - qemu-guest-agent
+
+      - name: Disable firewall
+        ansible.builtin.systemd:
+          name: firewalld
+          state: stopped
+          enabled: false
+
+      - name: Reboot to apply hostname
+        ansible.builtin.reboot:
+
+      - name: Fix SSH keys
+        file:
+          path: '{{ item }}'
+          state: absent
+        with_items:
+          - '/etc/ssh/ssh_host_dsa_key'
+          - '/etc/ssh/ssh_host_dsa_key.pub'
+          - '/etc/ssh/ssh_host_ecdsa_key'
+          - '/etc/ssh/ssh_host_ecdsa_key.pub'
+          - '/etc/ssh/ssh_host_ed25519_key'
+          - '/etc/ssh/ssh_host_ed25519_key.pub'
+          - '/etc/ssh/ssh_host_rsa_key'
+          - '/etc/ssh/ssh_host_rsa_key.pub'
+
+      - ansible.builtin.shell:
+          cmd: 'ssh-keygen -A && restorecon /etc/ssh/ssh_host_*'
+
+      - name: Create a directory if it does not exist
+        ansible.builtin.file:
+          path: /mnt/k8s
+          state: directory
+          mode: '0755'
+      
+      - name: Add fstab nfs share
+        ansible.posix.mount:
+          path: /mnt/k8s
+          src: 192.168.2.252:/mnt/tank/k8s
+          fstype: nfs
+          opts: _netdev
+          state: present
+
+      - name: Mount nfs share
+        ansible.posix.mount:
+          path: /mnt/k8s
+          src: 192.168.2.252:/mnt/tank/k8s
+          fstype: nfs
+          opts: _netdev
+          state: mounted
+
+      - name: Install k3s
+        ansible.builtin.shell: curl -sfL https://get.k3s.io | K3S_URL=https://svr-kube-ctl.korys.lan:6443 K3S_TOKEN={{ k3s_token }} sh -

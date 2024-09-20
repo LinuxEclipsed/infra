@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bookstack
+  name: bookstack
+  namespace: bookstack-dmz
+spec:
+  selector:
+    matchLabels:
+      app: bookstack
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: bookstack
+    spec:
+      containers:
+        - name: bookstack
+          image: lscr.io/linuxserver/bookstack:24.05.4
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          env:
+            - name: DB_DATABASE
+              value: bookstackapp
+            - name: DB_HOST
+              value: bookstack-db
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bookstack
+                  key: mysql-password
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bookstack
+                  key: mysql-user
+            - name: APP_URL
+              valueFrom:
+                secretKeyRef:
+                  name: bookstack
+                  key: url
+            - name: APP_DEFAULT_DARK_MODE
+              value: "true"
+            - name: PGID
+              value: "1000"
+            - name: PUID
+              value: "1000"
+            - name: TZ
+              value: America/Los_Angeles
+    #        - name: MAIL_USERNAME
+    #          value: example@test.com
+    #        - name: MAIL_PASSWORD 
+    #          value: mailpass
+    #        - name: MAIL_HOST
+    #          value: smtp.server.com
+    #        - name: MAIL_PORT
+    #          value: '465'
+    #        - name: MAIL_ENCRYPTION
+    #          value: SSL
+    #        - name: MAIL_DRIVER
+    #          value: smtp
+    #        - name: MAIL_FROM
+    #          value: no-reply@test.com
+          volumeMounts:
+            - name: bookstack-app-data
+              mountPath: /config
+      volumes:
+        - name: bookstack-app-data
+          persistentVolumeClaim:
+            claimName: bookstack-app-pvc

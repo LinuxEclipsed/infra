@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bookstack-db
+  namespace: bookstack-dmz
+  labels:
+    app: bookstack-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: mariadb
+          image: mysql:8
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bookstack
+                  key: mysql-password
+            - name: TZ
+              value: America/Los_Angeles
+          ports:
+            - containerPort: 3306
+              name: mysql
+          resources:
+            limits: {}
+            requests:
+              cpu: 20m
+              memory: 600Mi
+          volumeMounts:
+            - name: mariadb-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mariadb-data
+          persistentVolumeClaim:
+            claimName: bookstack-db-pvc

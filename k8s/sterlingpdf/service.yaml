@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sterlingpdf
+  name: sterlingpdf
+spec:
+  ports:
+    - port: 8080
+  selector:
+    app: sterlingpdf
+  type: ClusterIP

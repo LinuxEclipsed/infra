@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podhelper
+spec:
+  selector:
+    matchLabels:
+      app: podhelper
+  template:
+    metadata:
+      labels:
+        app: podhelper
+    spec:
+      containers:
+        - name: podhelper
+          image: jonlabelle/network-tools
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/bash", "-c", "--" ]
+          args: [ "while true; do sleep 30; done;" ]

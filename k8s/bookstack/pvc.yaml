@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: bookstack-db-data
+  namespace: bookstack-dmz
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  local:
+    path: /mnt/k8s/bookstack/db
+  nodeAffinity:
+    required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/os
+            operator: In
+            values:
+            - linux
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: bookstack-app-data
+  namespace: bookstack-dmz
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  local:
+    path: /mnt/k8s/bookstack/app
+  nodeAffinity:
+    required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/os
+            operator: In
+            values:
+            - linux
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bookstack-db-pvc
+  namespace: bookstack-dmz
+spec:
+  storageClassName: local-path
+  volumeName: bookstack-db-data
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bookstack-app-pvc
+  namespace: bookstack-dmz
+spec:
+  storageClassName: local-path
+  volumeName: bookstack-app-data
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi

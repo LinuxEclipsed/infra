@@ -1,0 +1,39 @@
+ - name: provision RHEL Servers
+   hosts: all
+
+   tasks:
+      - name: DNF update
+        dnf:
+          name: "*"
+          state: latest
+
+      - name: qemu install
+        dnf:
+          name: 
+            - qemu-guest-agent
+          state: latest
+
+      - name: Fix SSH keys
+        file:
+          path: '{{ item }}'
+          state: absent
+        with_items:
+          - '/etc/ssh/ssh_host_dsa_key'
+          - '/etc/ssh/ssh_host_dsa_key.pub'
+          - '/etc/ssh/ssh_host_ecdsa_key'
+          - '/etc/ssh/ssh_host_ecdsa_key.pub'
+          - '/etc/ssh/ssh_host_ed25519_key'
+          - '/etc/ssh/ssh_host_ed25519_key.pub'
+          - '/etc/ssh/ssh_host_rsa_key'
+          - '/etc/ssh/ssh_host_rsa_key.pub'
+
+      - ansible.builtin.shell:
+          cmd: 'ssh-keygen -A && restorecon /etc/ssh/ssh_host_*'
+
+      - name: Start Service
+        ansible.builtin.systemd:
+          name: "{{ item }}"
+          enabled: true
+          state: started
+        with_items:
+            - qemu-guest-agent
