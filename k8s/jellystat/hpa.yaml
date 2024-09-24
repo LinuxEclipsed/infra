@@ -4,12 +4,12 @@ metadata:
   name: jellystat
   namespace: prod
 spec:
-  maxReplicas: 3
+  maxReplicas: 2
   metrics:
   - resource:
       name: cpu
       target:
-        averageUtilization: 50
+        averageUtilization: 75
         type: Utilization
     type: Resource
   minReplicas: 1
