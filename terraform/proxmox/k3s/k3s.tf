@@ -1,9 +1,9 @@
 resource "proxmox_vm_qemu" "k3s" {
-    count       = 1
+    count       = 2
     name        = "SVR-Kube-${count.index}"
     target_node = "pve"
     clone       = "Alma-9.4-Template"
-    full_clone  = false
+    full_clone  = true
     agent       = 1
 
     memory      = 4096
