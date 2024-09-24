@@ -1,6 +1,6 @@
 resource "proxmox_vm_qemu" "k3s" {
     count       = 1
-    name        = "SVR-Kube-2"
+    name        = "SVR-Kube-${count.index}"
     target_node = "pve"
     clone       = "Alma-9.4-Template"
     full_clone  = false
@@ -17,7 +17,7 @@ resource "proxmox_vm_qemu" "k3s" {
     tags        = "k8s"
 
     provisioner "remote-exec" {
-      inline = ["echo 'SVR-Kube-2' > /etc/hostname"]
+      inline = ["echo 'SVR-Kube-${count.index}' > /etc/hostname"]
 
       connection {
         host        = self.default_ipv4_address
@@ -34,7 +34,7 @@ resource "proxmox_vm_qemu" "k3s" {
     network {
         bridge  = "vmbr0"
         model   = "virtio"
-        tag     = 252
+        tag     = 249
     }
 }
 
