@@ -1,5 +1,6 @@
 .terraform/
 terraform.*
+.terraform.*
 creds.auto.tfvars
 k3s.enc
 secrets.yaml
