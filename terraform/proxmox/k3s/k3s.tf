@@ -1,5 +1,5 @@
 resource "proxmox_vm_qemu" "k3s" {
-    count       = 2
+    count       = 3
     name        = "SVR-Kube-${count.index}"
     target_node = "pve"
     clone       = "Alma-9.4-Template"
