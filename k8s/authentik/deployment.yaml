@@ -88,8 +88,16 @@ spec:
                   matchLabels:
                     app.kubernetes.io/name: "authentik"
                     app.kubernetes.io/instance: "authentik"
-                    app.kubernetes.io/component: "worker"
+                    app.kubernetes.io/component: "server"
                 topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: location
+                    operator: NotIn
+                    values:
+                      - local
       enableServiceLinks: true
 ---
 apiVersion: apps/v1
@@ -196,4 +204,12 @@ spec:
                     app.kubernetes.io/instance: "authentik"
                     app.kubernetes.io/component: "server"
                 topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: location
+                    operator: NotIn
+                    values:
+                      - local
       enableServiceLinks: true

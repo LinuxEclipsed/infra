@@ -17,6 +17,15 @@ spec:
       labels:
         app: bookstack
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: location
+                    operator: NotIn
+                    values:
+                      - local
       containers:
         - name: bookstack
           image: lscr.io/linuxserver/bookstack:24.05.4

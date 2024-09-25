@@ -11,6 +11,15 @@ spec:
       labels:
         app: jellystat
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: location
+                    operator: In
+                    values:
+                      - local
       containers:
         - name: jellystat
           image: cyfershepard/jellystat:1.1.0
@@ -66,6 +75,15 @@ spec:
       labels:
         app: jellystat-db
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: location
+                    operator: In
+                    values:
+                      - local
       containers:
         - name: jellystat-db
           image: postgres:15-alpine
