@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cookbook-db
+  namespace: "cookbook"
+  labels:
+    app: cookbook-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cookbook-db
+  template:
+    metadata:
+      labels:
+        app: cookbook-db
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: location
+                    operator: In
+                    values:
+                      - local
+      containers:
+        - name: cookbook-db
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_DB
+                  name: cookbook-secrets
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: cookbook-secrets
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: cookbook-secrets
+            - name: PGDATA
+              value: /var/lib/postgresql/data/
+            - name: TZ
+              value: America/Los_Angeles
+          volumeMounts:
+            - name: cookbook-db-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: cookbook-db-data
+          persistentVolumeClaim:
+            claimName: cookbook-db-pvc

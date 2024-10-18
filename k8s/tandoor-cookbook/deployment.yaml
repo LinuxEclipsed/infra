@@ -1,0 +1,158 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cookbook-app
+  namespace: cookbook
+  labels:
+    app.kubernetes.io/name: cookbook-app
+    app: cookbook-app
+spec:
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cookbook-app
+      app: cookbook-app
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cookbook-app
+        app: cookbook-app
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: location
+                    operator: In
+                    values:
+                      - local
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      containers:
+        - name: cookbook-app
+          image: "vabene1111/recipes:1.5.20"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: DEBUG
+              value: "0"
+            - name: SQL_DEBUG
+              value: "0"
+            - name: DEBUG_TOOLBAR
+              value: "0"
+            - name: ALLOWED_HOSTS
+              value: "*"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: SECRET_KEY
+                  name: cookbook-secrets
+            - name: TZ
+              value: "America/Los_Angeles"
+            - name: DB_ENGINE
+              value: "django.db.backends.postgresql"
+            - name: POSTGRES_HOST
+              value: cookbook-db
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_DB
+                  name: cookbook-secrets
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: cookbook-secrets
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: cookbook-secrets
+            - name: FRACTION_PREF_DEFAULT
+              value: "0"
+            - name: COMMENT_PREF_DEFAULT
+              value: "1"
+            - name: SHOPPING_MIN_AUTOSYNC_INTERVAL
+              value: "5"
+            - name: GUNICORN_MEDIA
+              value: "0"
+            - name: REMOTE_USER_AUTH
+              value: "0"
+            - name: ENABLE_SIGNUP
+              value: "1"
+          volumeMounts:
+            - name: cookbook-config
+              mountPath: /opt/recipes/staticfiles
+            - name: cookbook-config
+              mountPath: /opt/recipes/mediafiles
+            - name: nginx-config
+              mountPath: /opt/recipes/nginx/conf.d
+      volumes:
+        - name: cookbook-config
+          persistentVolumeClaim:
+            claimName: cookbook-app-pvc
+        - name: nginx-config
+          configMap:
+            name: cookbook-configmap
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cookbook-web
+  namespace: cookbook
+  labels:
+    app.kubernetes.io/name: cookbook-web
+    app: cookbook-web
+spec:
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cookbook-web
+      app: cookbook-web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cookbook-web
+        app: cookbook-web
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: location
+                    operator: In
+                    values:
+                      - local
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      containers:
+        - name: cookbook-web
+          image: "nginx:latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+            - name: cookbook-config
+              mountPath: /opt/recipes/staticfiles
+            - name: cookbook-config
+              mountPath: /opt/recipes/mediafiles
+      volumes:
+        - name: cookbook-config
+          persistentVolumeClaim:
+            claimName: cookbook-app-pvc
+        - name: nginx-config
+          configMap:
+            name: cookbook-configmap
