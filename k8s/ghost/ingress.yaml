@@ -6,10 +6,6 @@ metadata:
   annotations:
     kubernetes.io/ingress.className: traefik
 spec:
-  tls:
-  - hosts:
-    - koryalbert.net
-    secretName: koryalbert-net
   ingressClassName: traefik
   rules:
   - host: koryalbert.net
