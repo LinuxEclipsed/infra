@@ -1,8 +1,0 @@
- - name: Update RHEL
-   hosts: all
-
-   tasks:
-      - name: DNF update
-        dnf:
-          name: "*"
-          state: latest
