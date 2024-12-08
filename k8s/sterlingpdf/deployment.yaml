@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: sterlingpdf
-        image: frooodle/s-pdf:latest
+        image: frooodle/s-pdf:0.36.0
         resources:
           requests:
             cpu: "100m"
@@ -30,7 +30,7 @@ spec:
           httpGet:
             path: /
             port: 8080
-          initialDelaySeconds: 5
+          initialDelaySeconds: 45
           timeoutSeconds: 1
           periodSeconds: 10
           failureThreshold: 3
