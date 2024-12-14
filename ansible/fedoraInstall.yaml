@@ -26,6 +26,7 @@
       - name:  Media package install
         dnf:
           name:
+           - "*"
            - "@multimedia"
            - "@sound-and-video"
            - gimp
@@ -36,7 +37,8 @@
            - ansible
            - podman
            - kubectl
-           - "*"
+           - vim
+           - git
           state: latest
           allowerasing: true
       - name: gstreamer install
