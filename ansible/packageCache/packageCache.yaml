@@ -1,0 +1,82 @@
+  - name: Package cache server setup
+    hosts: all
+
+    tasks:
+      - name: Package update
+        package:
+          name: "*"
+          state: latest
+
+      - name: Package install
+        dnf:
+          name:
+            - nginx
+            - nfs-utils
+
+      - name: Add nfs mount to fstab
+        ansible.builtin.lineinfile:
+          path: /etc/fstab
+          line: 192.168.2.252:/mnt/Junk/packageCache /mnt/packagecache nfs _netdev	0 0
+          create: no
+        
+      - name: Mount NFS volume
+        ansible.posix.mount:
+          src: 192.168.2.252:/mnt/Junk/packageCache
+          path: /mnt/packagecache
+          opts: rw,_netdev
+          state: mounted
+          fstype: nfs
+
+      - name: Copy config file
+        ansible.builtin.copy:
+          src: ./packagecache.conf
+          dest: /etc/nginx/conf.d/packagecache.conf
+          owner: root
+          group: wheel
+          mode: '0644'
+
+      - name: Create directory if it does not exist
+        ansible.builtin.file:
+          path: /mnt/packagecache/cache
+          state: directory
+          mode: '0755'
+          owner: nginx
+          group: nginx
+
+      - name: Create directory if it does not exist
+        ansible.builtin.file:
+          path: /mnt/packagecache/static
+          state: directory
+          mode: '0755'
+          owner: nginx
+          group: nginx
+
+      - name: Copy config file
+        ansible.builtin.copy:
+          src: ./rewrite.sh
+          dest: /mnt/packagecache/static/rewrite.sh
+          owner: nginx
+          group: nginx
+          mode: '0755'
+
+      - name: permanently enable http service, also enable it immediately if possible
+        ansible.posix.firewalld:
+          service: http
+          state: enabled
+          permanent: true
+          immediate: true
+          offline: true
+
+      - name: Put SELinux in permissive mode (Needed for nginx paths)
+        ansible.posix.selinux:
+          policy: targeted
+          state: permissive
+
+      - name: Start/Enable nginx
+        service:
+           name: nginx
+           enabled: yes
+           state: started
+
+      - name: Reboot
+        ansible.builtin.reboot:
