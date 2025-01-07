@@ -19,15 +19,6 @@ spec:
         app.kubernetes.io/name: cookbook-app
         app: cookbook-app
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: location
-                    operator: In
-                    values:
-                      - local
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       containers:
@@ -123,15 +114,6 @@ spec:
         app.kubernetes.io/name: cookbook-web
         app: cookbook-web
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: location
-                    operator: In
-                    values:
-                      - local
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       containers:

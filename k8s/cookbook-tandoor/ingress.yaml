@@ -3,9 +3,8 @@ kind: Ingress
 metadata:
   name: cookbook
   namespace: cookbook
-  annotations:
-    kubernetes.io/ingress.className: traefik
 spec:
+  ingressClassName: nginx
   rules:
   - host: cookbook.local.koryalbert.net
     http:
