@@ -17,15 +17,6 @@ spec:
       labels:
         app: bookstack
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: location
-                    operator: NotIn
-                    values:
-                      - local
       containers:
         - name: bookstack
           image: lscr.io/linuxserver/bookstack:24.05.4
@@ -62,20 +53,6 @@ spec:
               value: "1000"
             - name: TZ
               value: America/Los_Angeles
-    #        - name: MAIL_USERNAME
-    #          value: example@test.com
-    #        - name: MAIL_PASSWORD 
-    #          value: mailpass
-    #        - name: MAIL_HOST
-    #          value: smtp.server.com
-    #        - name: MAIL_PORT
-    #          value: '465'
-    #        - name: MAIL_ENCRYPTION
-    #          value: SSL
-    #        - name: MAIL_DRIVER
-    #          value: smtp
-    #        - name: MAIL_FROM
-    #          value: no-reply@test.com
           volumeMounts:
             - name: bookstack-app-data
               mountPath: /config

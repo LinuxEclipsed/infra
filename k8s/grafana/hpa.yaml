@@ -2,9 +2,9 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: grafana
-  namespace: prod
+  namespace: grafana
 spec:
-  maxReplicas: 3
+  maxReplicas: 2
   metrics:
   - resource:
       name: cpu

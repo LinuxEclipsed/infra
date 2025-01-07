@@ -3,14 +3,8 @@ kind: Ingress
 metadata:
   name: bookstack
   namespace: bookstack-dmz
-  annotations:
-    kubernetes.io/ingress.className: traefik
 spec:
-  tls:
-  - hosts:
-    - kb.koryalbert.net
-    secretName: koryalbert-net
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
   - host: kb.koryalbert.net
     http:
