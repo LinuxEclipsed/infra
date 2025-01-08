@@ -2,7 +2,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: jellystat
-  namespace: prod
+  namespace: jellystat
 spec:
   maxReplicas: 2
   metrics:

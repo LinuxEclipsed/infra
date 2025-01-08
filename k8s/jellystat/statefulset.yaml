@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jellystat-db
+  namespace: jellystat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellystat-db
+  template:
+    metadata:
+      labels:
+        app: jellystat-db
+    spec:
+      containers:
+        - name: jellystat-db
+          image: postgres:15-alpine
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "100Mi"
+            limits:
+              cpu: "700m"
+              memory: "300Mi"
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "mypassword"
+            - name: POSTGRES_DB
+              value: jfstat
+            - name: POSTGRES_USER
+              value: postgres
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: jellystat-data
+      volumes:
+        - name: jellystat-data
+          persistentVolumeClaim:
+            claimName: jellystat-data-pvc

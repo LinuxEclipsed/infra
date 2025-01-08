@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jellystat
+  namespace: jellystat
 spec:
   selector:
     matchLabels:
@@ -11,18 +12,10 @@ spec:
       labels:
         app: jellystat
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: location
-                    operator: In
-                    values:
-                      - local
       containers:
         - name: jellystat
           image: cyfershepard/jellystat:1.1.0
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               cpu: "100m"
@@ -55,56 +48,6 @@ spec:
               value: "my-secret-jwt-key"
           volumeMounts:
             - mountPath: /app/backend/backup-data
-              name: jellystat-data
-      volumes:
-        - name: jellystat-data
-          persistentVolumeClaim:
-            claimName: jellystat-data-pvc
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: jellystat-db
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: jellystat-db
-  template:
-    metadata:
-      labels:
-        app: jellystat-db
-    spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: location
-                    operator: In
-                    values:
-                      - local
-      containers:
-        - name: jellystat-db
-          image: postgres:15-alpine
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "100Mi"
-            limits:
-              cpu: "700m"
-              memory: "300Mi"
-          ports:
-            - containerPort: 5432
-          env:
-            - name: POSTGRES_PASSWORD
-              value: "mypassword"
-            - name: POSTGRES_DB
-              value: jfstat
-            - name: POSTGRES_USER
-              value: postgres
-          volumeMounts:
-            - mountPath: /var/lib/postgresql/data
               name: jellystat-data
       volumes:
         - name: jellystat-data
