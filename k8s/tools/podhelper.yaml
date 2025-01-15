@@ -17,3 +17,15 @@ spec:
           imagePullPolicy: IfNotPresent
           command: [ "/bin/bash", "-c", "--" ]
           args: [ "while true; do sleep 30; done;" ]
+          volumeMounts:
+            - name: viewdata
+              mountPath: /mnt
+            - name: viewdata2
+              mountPath: /media
+      volumes:
+        - name: viewdata
+          persistentVolumeClaim:
+            claimName: #name of PVC
+        - name: viewdata2
+          persistentVolumeClaim:
+            claimName: #name of PVC
