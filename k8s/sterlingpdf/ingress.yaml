@@ -2,9 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: sterlingpdf
-  annotations:
-    kubernetes.io/ingress.className: traefik
+  namespace: pdf
 spec:
+  ingressClassName: nginx
   rules:
   - host: pdf.local.koryalbert.net
     http:

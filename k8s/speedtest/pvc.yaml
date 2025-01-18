@@ -1,71 +1,27 @@
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: speedtest-tracker
-spec:
-  capacity:
-    storage: 500Mi
-  volumeMode: Filesystem
-  accessModes:
-  - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-path
-  local:
-    path: /mnt/k8s/speedtest/app
-  nodeAffinity:
-    required:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: kubernetes.io/os
-            operator: In
-            values:
-            - linux
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: speedtest-db
-spec:
-  capacity:
-    storage: 1Gi
-  volumeMode: Filesystem
-  accessModes:
-  - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-path
-  local:
-    path: /mnt/k8s/speedtest/db
-  nodeAffinity:
-    required:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: kubernetes.io/os
-            operator: In
-            values:
-            - linux
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: speedtest-app-pvc
+  namespace: speedtest
 spec:
-  storageClassName: local-path
-  volumeName: speedtest-tracker
+  storageClassName: longhorn
+  volumeName: speedtest-app
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 500Mi
+      storage: 100Mi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: speedtest-db-pvc
+  namespace: speedtest
 spec:
-  storageClassName: local-path
+  storageClassName: longhorn
   volumeName: speedtest-db
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 100Mi

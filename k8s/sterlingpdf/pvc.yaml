@@ -1,34 +1,13 @@
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: sterlingpdf-data
-spec:
-  capacity:
-    storage: 100Mi
-  volumeMode: Filesystem
-  accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-path
-  local:
-    path: /mnt/k8s/pdf
-  nodeAffinity:
-    required:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: kubernetes.io/os
-            operator: In
-            values:
-            - linux
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: sterlingpdf-data-pvc
+  namespace: pdf
 spec:
-  storageClassName: local-path
+  storageClassName: longhorn
+  volumeName: pdf-data
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: 50Mi

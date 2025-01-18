@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sterlingpdf
+  namespace: pdf
 spec:
   selector:
     matchLabels:
@@ -47,4 +48,4 @@ spec:
       volumes:
         - name: sterlingpdf-data
           persistentVolumeClaim:
-            claimName: sterlingpdf-data-pvc
+            claimName: pdf-data-pvc
