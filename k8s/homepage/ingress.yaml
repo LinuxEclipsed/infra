@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
     name: homepage
-    namespace: prod
+    namespace: homepage
     labels:
         app.kubernetes.io/name: homepage
     annotations:
@@ -12,6 +12,7 @@ metadata:
         gethomepage.dev/icon: homepage.png
         gethomepage.dev/name: Homepage
 spec:
+    ingressClassName: nginx
     rules:
         - host: "dashboard.local.koryalbert.net"
           http:

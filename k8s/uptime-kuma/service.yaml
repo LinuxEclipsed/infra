@@ -4,6 +4,7 @@ metadata:
   labels:
     app: uptime-kuma
   name: uptime-kuma
+  namespace: uptime-kuma
 spec:
   ports:
     - port: 3001

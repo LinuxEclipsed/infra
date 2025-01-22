@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: uptime-kuma
+  namespace: uptime-kuma
 spec:
   selector:
     matchLabels:
@@ -12,15 +13,6 @@ spec:
       labels:
         app: uptime-kuma
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: location
-                    operator: In
-                    values:
-                      - local
       containers:
       - name: uptime-kuma
         image: louislam/uptime-kuma:latest

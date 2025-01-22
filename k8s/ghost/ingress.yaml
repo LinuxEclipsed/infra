@@ -3,10 +3,8 @@ kind: Ingress
 metadata:
   name: ghost
   namespace: ghost-dmz
-  annotations:
-    kubernetes.io/ingress.className: traefik
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
   - host: koryalbert.net
     http:

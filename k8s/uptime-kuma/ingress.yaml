@@ -2,9 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: uptime-kuma
-  annotations:
-    kubernetes.io/ingress.className: traefik
+  namespace: uptime-kuma
 spec:
+  ingressClassName: nginx
   rules:
   - host: uptime.korys.lan
     http:

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: homepage
-  namespace: prod
+  namespace: homepage
   labels:
     app.kubernetes.io/name: homepage
 spec:
@@ -16,15 +16,6 @@ spec:
       labels:
         app.kubernetes.io/name: homepage
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: location
-                    operator: In
-                    values:
-                      - local
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       containers:
