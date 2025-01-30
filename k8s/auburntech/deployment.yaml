@@ -23,8 +23,29 @@ spec:
     spec:
       containers:
         - name: auburntech
-          image: trafex/php-nginx
+          image: public.ecr.aws/b7c8g1g5/linuxeclipsed/php-sns-website:2025.1.21
           imagePullPolicy: IfNotPresent
+          env:
+            - name: AWS_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: auburntech
+                  key: AWS_REGION
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: auburntech
+                  key: AWS_ACCESS_KEY
+            - name: AWS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: auburntech
+                  key: AWS_SECRET_KEY
+            - name: AWS_SNS_TOPIC_ARN
+              valueFrom:
+                secretKeyRef:
+                  name: auburntech
+                  key: AWS_SNS_TOPIC_ARN
           ports:
             - containerPort: 8080
               name: website-port
@@ -52,9 +73,11 @@ spec:
               cpu: 100m
               memory: 150Mi
           volumeMounts:
-            - mountPath: /var/www/html
+            - mountPath: /app
               name: auburntech-data
       volumes:
         - name: auburntech-data
-          persistentVolumeClaim:
-            claimName: auburntech-pvc
+          nfs:
+            server: 192.168.2.252
+            path: "/mnt/tank/nfs/Websites/AuburnTechConsulting"
+            readOnly: true

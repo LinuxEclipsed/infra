@@ -3,14 +3,9 @@ kind: Ingress
 metadata:
   name: auburntech
   namespace: auburntech-dmz
-  annotations:
-    kubernetes.io/ingress.className: traefik
+
 spec:
-  tls:
-  - hosts:
-    - auburntechconsulting.com
-    secretName: auburntech-com
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
   - host: auburntechconsulting.com
     http:
