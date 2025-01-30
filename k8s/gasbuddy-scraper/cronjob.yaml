@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: gasbuddy-scraper
+spec:
+  schedule: "00 */6 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: gasbuddy-scraper
+            image: public.ecr.aws/b7c8g1g5/linuxeclipsed/gasbuddy-scraper:latest
+            env:
+            - name: INFLUXDB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-secrets
+                  key: token
+            - name: INFLUXDB_ORG
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-secrets
+                  key: org
+            - name: INFLUXDB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-secrets
+                  key: url
+            - name: INFLUXDB_BUCKET
+              value: "gas_prices"
+            - name: STATION_ID
+              value: "177667"  # Replace with your desired station ID
+          restartPolicy: OnFailure
