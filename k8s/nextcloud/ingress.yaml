@@ -4,6 +4,7 @@ metadata:
   name: nextcloud
   namespace: "nextcloud-dmz"
 spec:
+  ingressClassName: nginx
   rules:
     - host: nextcloud.koryalbert.net
       http:

@@ -17,6 +17,7 @@ spec:
     spec:
       containers:
         - image: redis:alpine
+          imagePullPolicy: IfNotPresent
           name: redis
           ports:
             - containerPort: 6379
@@ -45,6 +46,7 @@ spec:
       containers:
         - name: postgresql
           image: postgres:15
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432
           env:
@@ -73,4 +75,4 @@ spec:
       volumes:
         - name: postgresql-data
           persistentVolumeClaim:
-            claimName: postgresql-pvc
+            claimName: nextcloud-db-pvc
