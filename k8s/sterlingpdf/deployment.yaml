@@ -47,5 +47,4 @@ spec:
         - containerPort: 8080
       volumes:
         - name: sterlingpdf-data
-          persistentVolumeClaim:
-            claimName: pdf-data-pvc
+          emptyDir: {}
