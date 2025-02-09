@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
           - name: gasbuddy-scraper
-            image: public.ecr.aws/b7c8g1g5/linuxeclipsed/gasbuddy-scraper:2025.1.29
+            image: public.ecr.aws/b7c8g1g5/linuxeclipsed/gasbuddy-scraper:25.02.09
             env:
             - name: INFLUXDB_TOKEN
               valueFrom:
@@ -32,5 +32,7 @@ spec:
             - name: INFLUXDB_BUCKET
               value: "gas_prices"
             - name: STATION_ID
-              value: "177667"  # Replace with your desired station ID
+              value: "177667,14863"  # Replace with your desired station ID
+            - name: STATION_NAMES
+              value: "Roseville-Costco,Auburn-Speedway"
           restartPolicy: OnFailure
