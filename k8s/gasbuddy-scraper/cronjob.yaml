@@ -31,7 +31,7 @@ spec:
                   key: url
             - name: INFLUXDB_BUCKET
               value: "gas_prices"
-            - name: STATION_ID
+            - name: STATION_IDS
               value: "177667,14863"  # Replace with your desired station ID
             - name: STATION_NAMES
               value: "Roseville-Costco,Auburn-Speedway"
