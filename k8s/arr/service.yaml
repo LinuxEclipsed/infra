@@ -65,3 +65,16 @@ spec:
   - port: 5055
     targetPort: 5055
   type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: audiobookshelf
+  namespace: arr
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: audiobookshelf
