@@ -340,7 +340,7 @@ spec:
         - name: books
           nfs:
             server: 192.168.2.252
-            path: /mnt/tank/nfs/Books
+            path: /mnt/tank/nfs/Temp/Books
         - name: downloads
           nfs:
             server: 192.168.2.252
