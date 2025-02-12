@@ -126,6 +126,25 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: readarr
+  namespace: arr
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: books.local.koryalbert.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readarr
+                port:
+                  number: 8787
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: audiobookshelf
   namespace: arr
 spec:

@@ -302,6 +302,53 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: readarr
+  namespace: arr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: readarr
+  template:
+    metadata:
+      labels:
+        app: readarr
+    spec:
+      containers:
+        - name: readarr
+          image: lscr.io/linuxserver/readarr:develop
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "America/Los_angeles"
+          ports:
+            - containerPort: 8787
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: books
+              mountPath: /books
+            - name: downloads
+              mountPath: /downloads
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: readarr-config-pvc
+        - name: books
+          nfs:
+            server: 192.168.2.252
+            path: /mnt/tank/nfs/Books
+        - name: downloads
+          nfs:
+            server: 192.168.2.252
+            path: /mnt/Junk/Download
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: audiobookshelf
   namespace: arr
 spec:

@@ -69,6 +69,19 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: readarr
+  namespace: arr
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8787
+      targetPort: 8787
+  selector:
+    app: readarr
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: audiobookshelf
   namespace: arr
 spec:
