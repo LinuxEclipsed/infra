@@ -1,0 +1,46 @@
+  - name: Configure jenkins agent on RHEL
+    hosts: all
+
+    tasks:
+      - name: Yum install
+        dnf:
+          name:
+            - yum-utils
+          state: latest
+
+      - name: Install repo
+        command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+      - name: Docker Install
+        dnf:
+          name:
+            - docker-ce
+            - docker-ce-cli
+            - containerd.io
+            - docker-compose-plugin
+            - java-21-openjdk
+            - git
+            - awscli2
+            - ansible-core
+
+      - name: Start/Enable Docker
+        service:
+           name: docker
+           enabled: yes
+           state: started
+
+      - name: Create aws config directory
+        ansible.builtin.file:
+          path: /root/.aws
+          state: directory
+
+      - name: Create aws credentials file
+        ansible.builtin.file:
+          path: /root/.aws/credentials
+          state: touch
+          mode: '0600'
+
+      - name: Write aws credentials file
+        copy:
+          content: "test"
+          dest: /root/.aws/credentials
