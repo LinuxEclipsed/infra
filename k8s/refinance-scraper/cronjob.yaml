@@ -2,6 +2,8 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: mortgage-rate-scraper
+    labels:
+    app.kubernetes.io/instance: refinance-scraper
 spec:
   schedule: "0 */24 * * *"
   jobTemplate:
