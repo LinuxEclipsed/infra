@@ -12,28 +12,28 @@ spec:
         spec:
           containers:
           - name: scraper
-            image: public.ecr.aws/b7c8g1g5/linuxeclipsed/refinancescraper:25.02.18
+            image: public.ecr.aws/b7c8g1g5/linuxeclipsed/refinancescraper:25.02.19
             env:
             - name: INFLUXDB_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: influxdb-secret
+                  name: morgage-secrets
                   key: token
             - name: INFLUXDB_ORG
               valueFrom:
                 secretKeyRef:
-                  name: influxdb-secret
+                  name: morgage-secrets
                   key: org
             - name: INFLUXDB_URL
               valueFrom:
                 secretKeyRef:
-                  name: influxdb-secret
+                  name: morgage-secrets
                   key: url
             - name: INFLUXDB_BUCKET
               value: "mortgage_rates"
             - name: ZILLOW_PID
               valueFrom:
                 secretKeyRef:
-                  name: zillow-secret
+                  name: morgage-secrets
                   key: pid
           restartPolicy: OnFailure
