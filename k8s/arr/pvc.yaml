@@ -9,7 +9,7 @@ spec:
   storageClassName: longhorn
   resources:
     requests:
-      storage: 500Mi
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -20,9 +20,10 @@ spec:
   accessModes:
     - ReadWriteMany
   storageClassName: longhorn
+  volumeName: prowlarr-data
   resources:
     requests:
-      storage: 200Mi
+      storage: 500Mi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -35,7 +36,7 @@ spec:
   storageClassName: longhorn
   resources:
     requests:
-      storage: 300Mi
+      storage: 512Mi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
