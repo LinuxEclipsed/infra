@@ -9,7 +9,7 @@ spec:
   storageClassName: longhorn
   resources:
     requests:
-      storage: 1Gi
+      storage: 3Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -23,7 +23,7 @@ spec:
   volumeName: prowlarr-data
   resources:
     requests:
-      storage: 500Mi
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -36,7 +36,7 @@ spec:
   storageClassName: longhorn
   resources:
     requests:
-      storage: 512Mi
+      storage: 3Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
