@@ -411,6 +411,10 @@ spec:
           env:
             - name: TZ
               value: "America/Los_angeles"
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
           volumeMounts:
             - name: movies
               mountPath: /movies
@@ -418,6 +422,22 @@ spec:
               mountPath: /config
             - name: tv
               mountPath: /tv
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 6767
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 6767
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
       volumes:
         - name: movies
           nfs:
