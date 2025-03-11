@@ -160,3 +160,22 @@ spec:
                 name: audiobookshelf
                 port:
                   number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bazarr
+  namespace: arr
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: bazarr.local.koryalbert.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bazarr
+                port:
+                  number: 6767

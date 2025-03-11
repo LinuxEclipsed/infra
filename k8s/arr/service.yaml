@@ -91,3 +91,16 @@ spec:
       targetPort: 80
   selector:
     app: audiobookshelf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bazarr
+  namespace: arr
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6767
+      targetPort: 6767
+  selector:
+    app: bazarr
