@@ -410,7 +410,7 @@ spec:
             - containerPort: 6767
           env:
             - name: TZ
-              value: "America/Los_angeles"
+              value: "America/Los_Angeles"
             - name: PUID
               value: "1000"
             - name: PGID
