@@ -317,6 +317,7 @@ spec:
       containers:
         - name: readarr
           image: lscr.io/linuxserver/readarr:develop
+          imagePullPolicy: Always
           env:
             - name: PUID
               value: "1000"
@@ -364,6 +365,7 @@ spec:
       containers:
         - name: audiobookshelf
           image: ghcr.io/advplyr/audiobookshelf:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:
