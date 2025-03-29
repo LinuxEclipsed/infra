@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codeproject-ai
+  namespace: dvr
+  labels:
+    app: codeproject-ai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: codeproject-ai
+  template:
+    metadata:
+      labels:
+        app: codeproject-ai
+    spec:
+      containers:
+      - name: codeproject-ai
+        image: codeproject/ai-server:gpu
+        ports:
+        - containerPort: 32168
+        resources:
+          limits:
+            nvidia.com/gpu: 1
