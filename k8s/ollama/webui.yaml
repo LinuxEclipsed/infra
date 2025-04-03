@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webui
+  namespace: ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: webui
+  template:
+    metadata:
+      labels:
+        name: webui
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: gpu
+                operator: In
+                values:
+                  - "true"
+      volumes:
+      - name: webui-storage
+        persistentVolumeClaim:
+            claimName: webui-storage-pvc
+      containers:
+        - name: webui
+          image: ghcr.io/open-webui/open-webui:main
+          volumeMounts:
+          - mountPath: /app/backend/data
+            name: webui-storage
+          env:
+            - name: OLLAMA_BASE_URLS
+              value: "http://ollama"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              memory: 1Gi
