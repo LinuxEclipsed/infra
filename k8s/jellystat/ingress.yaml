@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: jellystat
   namespace: jellystat
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - jellystat.local.koryalbert.net
+    secretName: koryalbert-tls
   rules:
     - host: jellystat.local.koryalbert.net
       http:

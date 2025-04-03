@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: sterlingpdf
   namespace: pdf
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - pdf.local.koryalbert.net
+    secretName: koryalbert-tls
   rules:
   - host: pdf.local.koryalbert.net
     http:

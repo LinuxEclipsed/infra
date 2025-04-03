@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: longhorn-ingress
   namespace: longhorn-system
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - longhorn.local.koryalbert.net
+    secretName: koryalbert-tls
   rules:
   - host: longhorn.local.koryalbert.net
     http:

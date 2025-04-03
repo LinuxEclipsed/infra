@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: grafana
   namespace: grafana
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - grafana.local.koryalbert.net
+    secretName: koryalbert-tls
   rules:
   - host: grafana.local.koryalbert.net
     http:

@@ -2,9 +2,15 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: codeprojectai-ingress
-  namespace: dvr
+  namespace: codeprojectai
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - codeprojectai.local.koryalbert.net
+    secretName: koryalbert-tls
   rules:
   - host: codeprojectai.local.koryalbert.net
     http:

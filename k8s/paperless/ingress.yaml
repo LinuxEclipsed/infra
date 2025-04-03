@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: paperless
   namespace: paperless
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - docs.local.koryalbert.net
+    secretName: koryalbert-tls
   rules:
     - host: docs.local.koryalbert.net
       http:

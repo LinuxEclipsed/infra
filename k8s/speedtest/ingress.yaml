@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: speedtest
   namespace: speedtest
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - speedtest.local.koryalbert.net
+    secretName: koryalbert-tls
   rules:
   - host: speedtest.local.koryalbert.net
     http:

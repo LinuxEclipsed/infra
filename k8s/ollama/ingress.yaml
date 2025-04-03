@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: webui-ingress
   namespace: ollama
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - ollama.local.koryalbert.net
+    secretName: koryalbert-tls
   rules:
   - host: ollama.local.koryalbert.net
     http:

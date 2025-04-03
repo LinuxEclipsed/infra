@@ -3,9 +3,14 @@ kind: Ingress
 metadata:
   name: jenkins
   namespace: jenkins
-
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - jenkins.local.koryalbert.net
+    secretName: koryalbert-tls
   rules:
   - host: jenkins.local.koryalbert.net
     http:

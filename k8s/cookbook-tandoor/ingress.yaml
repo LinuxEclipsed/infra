@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: cookbook
   namespace: cookbook
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - cookbook.local.koryalbert.net
+    secretName: koryalbert-tls
   rules:
   - host: cookbook.local.koryalbert.net
     http:

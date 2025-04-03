@@ -16,3 +16,13 @@ spec:
                 name: ghost
                 port:
                   number: 2368
+  - host: www.koryalbert.net
+    http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ghost
+                port:
+                  number: 2368
