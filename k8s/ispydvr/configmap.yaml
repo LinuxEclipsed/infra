@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agentdvr-config
+  namespace: dvr
+
+data:
+  PUID: "1000"
+  PGID: "1000"
+  AGENTDVR_WEBUI_PORT: "8090"
+  TZ: "America/Los_Angeles"

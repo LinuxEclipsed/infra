@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ispyagentdvr
+  namespace: dvr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ispyagentdvr
+  template:
+    metadata:
+      labels:
+        app: ispyagentdvr
+    spec:
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Equal"
+        value: "true"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: gpu
+                operator: In
+                values:
+                  - "true"
+      hostNetwork: true  # Required for UDP port ranges
+      containers:
+      - name: ispyagentdvr
+        image: mekayelanik/ispyagentdvr:latest
+        envFrom:
+        - configMapRef:
+            name: agentdvr-config
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+        ports:
+        - containerPort: 8090
+        - containerPort: 3478 
+        volumeMounts:
+        - name: config-volume
+          mountPath: /AgentDVR/Media/XML
+        - name: media-volume
+          mountPath: /AgentDVR/Media/WebServerRoot/Media
+      volumes:
+      - name: config-volume
+        persistentVolumeClaim:
+          claimName: ispyagentdvr-config-pvc
+      - name: media-volume
+        nfs:
+          server: 192.168.2.252
+          path:  /mnt/tank/dvr
