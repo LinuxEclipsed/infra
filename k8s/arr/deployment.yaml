@@ -61,7 +61,6 @@ spec:
         nfs:
           server: 192.168.2.252
           path: /mnt/Junk/Download
-      restartPolicy: Always
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -114,7 +113,6 @@ spec:
       - name: prowlarr-data
         persistentVolumeClaim:
           claimName: prowlarr-data-pvc
-      restartPolicy: Always
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -179,7 +177,6 @@ spec:
         nfs:
           server: 192.168.2.252
           path: /mnt/Junk/Download
-      restartPolicy: Always
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -244,7 +241,6 @@ spec:
         nfs:
           server: 192.168.2.252
           path: /mnt/Junk/Download
-      restartPolicy: Always
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -297,7 +293,6 @@ spec:
       - name: jellyseerr-data
         persistentVolumeClaim:
           claimName: jellyseerr-data-pvc
-      restartPolicy: Always
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -315,37 +310,37 @@ spec:
         app: readarr
     spec:
       containers:
-        - name: readarr
-          image: lscr.io/linuxserver/readarr:develop
-          imagePullPolicy: Always
-          env:
-            - name: PUID
-              value: "1000"
-            - name: PGID
-              value: "1000"
-            - name: TZ
-              value: "America/Los_angeles"
-          ports:
-            - containerPort: 8787
-          volumeMounts:
-            - name: config
-              mountPath: /config
-            - name: books
-              mountPath: /books
-            - name: downloads
-              mountPath: /downloads
-      volumes:
+      - name: readarr
+        image: lscr.io/linuxserver/readarr:develop
+        imagePullPolicy: Always
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "America/Los_Angeles"
+        ports:
+        - containerPort: 8787
+        volumeMounts:
         - name: config
-          persistentVolumeClaim:
-            claimName: readarr-config-pvc
+          mountPath: /config
         - name: books
-          nfs:
-            server: 192.168.2.252
-            path: /mnt/tank/nfs/Temp/Books
+          mountPath: /books
         - name: downloads
-          nfs:
-            server: 192.168.2.252
-            path: /mnt/Junk/Download
+          mountPath: /downloads
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: readarr-config-pvc
+      - name: books
+        nfs:
+          server: 192.168.2.252
+          path: /mnt/tank/nfs/Temp/Books
+      - name: downloads
+        nfs:
+          server: 192.168.2.252
+          path: /mnt/Junk/Download
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -363,32 +358,32 @@ spec:
         app: audiobookshelf
     spec:
       containers:
-        - name: audiobookshelf
-          image: ghcr.io/advplyr/audiobookshelf:latest
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 80
-          env:
-            - name: TZ
-              value: "America/Los_angeles"
-          volumeMounts:
-            - name: audiobooks
-              mountPath: /audiobooks
-            - name: config
-              mountPath: /config
-            - name: metadata
-              mountPath: /metadata
-      volumes:
+      - name: audiobookshelf
+        image: ghcr.io/advplyr/audiobookshelf:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: TZ
+          value: "America/Los_Angeles"
+        volumeMounts:
         - name: audiobooks
-          nfs:
-            server: 192.168.2.252
-            path: "/mnt/tank/nfs/Temp/Books"
+          mountPath: /audiobooks
         - name: config
-          persistentVolumeClaim:
-            claimName: audiobookshelf-config-pvc
+          mountPath: /config
         - name: metadata
-          persistentVolumeClaim:
-            claimName: audiobookshelf-metadata-pvc
+          mountPath: /metadata
+      volumes:
+      - name: audiobooks
+        nfs:
+          server: 192.168.2.252
+          path: /mnt/tank/nfs/Temp/Books
+      - name: config
+        persistentVolumeClaim:
+          claimName: audiobookshelf-config-pvc
+      - name: metadata
+        persistentVolumeClaim:
+          claimName: audiobookshelf-metadata-pvc
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -406,24 +401,24 @@ spec:
         app: bazarr
     spec:
       containers:
-        - name: bazarr
-          image: lscr.io/linuxserver/bazarr:latest
-          ports:
-            - containerPort: 6767
-          env:
-            - name: TZ
-              value: "America/Los_Angeles"
-            - name: PUID
-              value: "1000"
-            - name: PGID
-              value: "1000"
-          volumeMounts:
-            - name: movies
-              mountPath: /movies
-            - name: config
-              mountPath: /config
-            - name: tv
-              mountPath: /tv
+      - name: bazarr
+        image: lscr.io/linuxserver/bazarr:latest
+        ports:
+        - containerPort: 6767
+        env:
+        - name: TZ
+          value: "America/Los_Angeles"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        volumeMounts:
+        - name: movies
+          mountPath: /movies
+        - name: config
+          mountPath: /config
+        - name: tv
+          mountPath: /tv
         livenessProbe:
           httpGet:
             path: /
@@ -445,14 +440,14 @@ spec:
             memory: "210Mi"
             cpu: "100m"
       volumes:
-        - name: movies
-          nfs:
-            server: 192.168.2.252
-            path: "/mnt/tank/nfs/Temp/Movies"
-        - name: config
-          persistentVolumeClaim:
-            claimName: bazarr-config-pvc
-        - name: tv
-          nfs:
-            server: 192.168.2.252
-            path: "/mnt/tank/nfs/Temp/Tv"
+      - name: movies
+        nfs:
+          server: 192.168.2.252
+          path: /mnt/tank/nfs/Temp/Movies
+      - name: config
+        persistentVolumeClaim:
+          claimName: bazarr-config-pvc
+      - name: tv
+        nfs:
+          server: 192.168.2.252
+          path: /mnt/tank/nfs/Temp/Tv
