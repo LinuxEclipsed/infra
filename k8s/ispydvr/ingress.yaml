@@ -7,10 +7,10 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
-  tls:
-  - hosts:
-      - dvr.local.koryalbert.net
-    secretName: koryalbert-tls
+#  tls:
+#  - hosts:
+#      - dvr.local.koryalbert.net
+#    secretName: koryalbert-tls
   rules:
   - host: dvr.local.koryalbert.net
     http:
