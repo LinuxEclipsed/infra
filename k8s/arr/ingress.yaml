@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: sonarr
   namespace: arr
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - "*.local.koryalbert.net"
+    secretName: koryalbert-tls
   rules:
     - host: sonarr.local.koryalbert.net
       http:
@@ -16,7 +22,7 @@ spec:
                 name: sonarr
                 port:
                   number: 8989
-    - host: tv.korys.lan
+    - host: tv.local.koryalbert.net
       http:
         paths:
           - path: /
@@ -34,6 +40,10 @@ metadata:
   namespace: arr
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - "*.local.koryalbert.net"
+    secretName: koryalbert-tls
   rules:
     - host: radarr.local.koryalbert.net
       http:
@@ -45,7 +55,7 @@ spec:
                 name: radarr
                 port:
                   number: 7878
-    - host: movies.korys.lan
+    - host: movies.local.koryalbert.net
       http:
         paths:
           - path: /
@@ -63,6 +73,10 @@ metadata:
   namespace: arr
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - "*.local.koryalbert.net"
+    secretName: koryalbert-tls
   rules:
     - host: prowlarr.local.koryalbert.net
       http:
@@ -82,6 +96,10 @@ metadata:
   namespace: arr
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - "*.local.koryalbert.net"
+    secretName: koryalbert-tls
   rules:
     - host: lidarr.local.koryalbert.net
       http:
@@ -101,6 +119,10 @@ metadata:
   namespace: arr
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - "*.local.koryalbert.net"
+    secretName: koryalbert-tls
   rules:
     - host: jellyseerr.local.koryalbert.net
       http:
@@ -112,7 +134,7 @@ spec:
                 name: jellyseerr
                 port:
                   number: 5055
-    - host: media.korys.lan
+    - host: media.local.koryalbert.net
       http:
         paths:
           - path: /
@@ -130,6 +152,10 @@ metadata:
   namespace: arr
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - "*.local.koryalbert.net"
+    secretName: koryalbert-tls
   rules:
     - host: readarr.local.koryalbert.net
       http:
@@ -149,6 +175,10 @@ metadata:
   namespace: arr
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - "*.local.koryalbert.net"
+    secretName: koryalbert-tls
   rules:
     - host: audiobookshelf.local.koryalbert.net
       http:
@@ -168,6 +198,10 @@ metadata:
   namespace: arr
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - "*.local.koryalbert.net"
+    secretName: koryalbert-tls
   rules:
     - host: bazarr.local.koryalbert.net
       http:
