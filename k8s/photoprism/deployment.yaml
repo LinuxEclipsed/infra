@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: photoprism
+  namespace: photoprism
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: photoprism
+  template:
+    metadata:
+      labels:
+        app: photoprism
+    spec:
+      containers:
+      - name: photoprism
+        image: photoprism/photoprism:latest
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: photoprism-config 
+        volumeMounts:
+        - mountPath: /photoprism/storage
+          name: cache-storage
+        - mountPath: /photoprism/originals
+          name: photo-storage
+          readOnly: true
+        ports:
+        - containerPort: 2342
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 2342
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 2342
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+      volumes:
+      - name: cache-storage
+        nfs:
+          server: 192.168.2.252
+          path: /mnt/Junk/Photoprism 
+      - name: photo-storage
+        nfs:
+          server: 192.168.2.252
+          path: /mnt/tank/nfs/Pictures

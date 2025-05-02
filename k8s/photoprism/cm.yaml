@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: photoprism-config
+  namespace: photoprism
+data:
+  PHOTOPRISM_UPLOAD_NSFW: "true"
+  PHOTOPRISM_DISABLE_RAW: "true"
+  PHOTOPRISM_AUTH_MODE: "public"
+  PHOTOPRISM_SITE_TITLE: "Kory & Ariela"
+  PHOTOPRISM_SITE_CAPTION: "Kory & Ariela"
+  PHOTOPRISM_SITE_DESCRIPTION: "Kory & Arielas Photo Gallery"
+  PHOTOPRISM_SITE_AUTHOR: "Kory Albert"
