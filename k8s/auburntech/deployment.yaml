@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: auburntech
-          image: public.ecr.aws/b7c8g1g5/linuxeclipsed/php-sns-website:2025.1.21
+          image: public.ecr.aws/b7c8g1g5/linuxeclipsed/php-sns-website:2025.5.4
           imagePullPolicy: IfNotPresent
           env:
             - name: AWS_REGION
