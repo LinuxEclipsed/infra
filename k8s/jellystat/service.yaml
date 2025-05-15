@@ -4,23 +4,10 @@ metadata:
   labels:
     app: jellystat
   name: jellystat
-  namespace: jellystat
+  namespace: jelly
 spec:
   ports:
     - port: 3000
   selector:
     app: jellystat
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: jellystat-db
-  namespace: jellystat
-spec:
-  ports:
-  - port: 5432
-    targetPort: 5432
-  selector:
-    app: jellystat-db
   type: ClusterIP

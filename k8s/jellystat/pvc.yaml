@@ -2,10 +2,9 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: jellystat-data-pvc
-  namespace: jellystat
+  namespace: jelly
 spec:
-  storageClassName: longhorn
-  volumeName: jellystat-data
+  storageClassName: longhorn-xfs
   accessModes:
     - ReadWriteMany
   resources:
