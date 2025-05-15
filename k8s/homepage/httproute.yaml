@@ -9,7 +9,7 @@ spec:
     namespace: gateway
     sectionName: local-koryalbert-net
   hostnames:
-  - "homepage.local.koryalbert.net"
+  - "dashboard.local.koryalbert.net"
   rules:
   - matches:
     - path:
