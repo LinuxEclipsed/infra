@@ -96,6 +96,7 @@ spec:
     sectionName: local-koryalbert-net
   hostnames:
   - "jellyseerr.local.koryalbert.net"
+  - "media.local.koryalbert.net"
   rules:
   - matches:
     - path:
