@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: k8s-prometheus-gateway
+  namespace: kube-prometheus-stack
+spec:
+  parentRefs:
+  - name: gateway-local-koryalbert
+    namespace: gateway
+    sectionName: local-koryalbert-net
+  hostnames:
+  - "k8s-prometheus.local.koryalbert.net"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: kube-prometheus-stack-prometheus
+      port: 9090
