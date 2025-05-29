@@ -32,7 +32,7 @@ spec:
             - name: INFLUXDB_BUCKET
               value: "gas_prices"
             - name: STATION_IDS
-              value: "177667,14863"  # Replace with your desired station ID
+              value: "177667,14863,74355"  # Replace with your desired station ID
             - name: STATION_NAMES
-              value: "Roseville-Costco,Auburn-Speedway"
+              value: "Roseville-Costco,Auburn-Speedway,Auburn-Sinclair"
           restartPolicy: OnFailure
