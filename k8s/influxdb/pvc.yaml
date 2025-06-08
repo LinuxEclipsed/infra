@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: influxdb-data
+  namespace: kube-prometheus-stack
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn-xfs
+  resources:
+    requests:
+      storage: 1Gi

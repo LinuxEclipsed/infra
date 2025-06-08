@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influxdb
+  namespace: kube-prometheus-stack
+  labels:
+    app: influxdb
+spec:
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+        - name: influxdb
+          image: "influxdb:2"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8086
+              protocol: TCP
+          volumeMounts:
+          - name: data
+            mountPath: /var/lib/influxdb2
+          - name: data
+            mountPath: /etc/influxdb2
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: influxdb-data
