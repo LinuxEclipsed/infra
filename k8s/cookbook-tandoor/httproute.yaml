@@ -9,7 +9,7 @@ spec:
     namespace: gateway
     sectionName: local-koryalbert-net
   hostnames:
-  - "codeprojectai.local.koryalbert.net"
+  - "cookbook.local.koryalbert.net"
   rules:
   - matches:
     - path:
