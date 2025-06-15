@@ -24,4 +24,4 @@ spec:
     topologyKey: kubernetes.io/hostname
   storage:
     storageClass: longhorn-xfs-1rep
-    size: 1Gi
+    size: 2Gi
