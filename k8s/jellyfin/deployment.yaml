@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  namespace: jelly
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Equal"
+          value: "true"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: gpu
+                operator: In
+                values:
+                  - "true"
+      priorityClassName: high
+      containers:
+        - name: jellyfin
+          image: lscr.io/linuxserver/jellyfin:10.10.7
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8096
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "America/Los_Angeles"
+          volumeMounts:
+            - mountPath: /config
+              name: config-vol
+            - mountPath: /data/tvshows
+              name: tvshows-vol
+            - mountPath: /data/tvshows-temp
+              name: tvshows-temp-vol
+            - mountPath: /data/movies
+              name: movies-vol
+            - mountPath: /data/movies-temp
+              name: movies-temp-vol
+            - mountPath: /data/music
+              name: music-vol
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+            requests:
+              cpu: "0.5"
+              memory: "500Mi"
+          readinessProbe:
+            httpGet:
+              path: /web
+              port: 8096
+            initialDelaySeconds: 10
+            periodSeconds: 3
+      volumes:
+        - name: config-vol
+          persistentVolumeClaim:
+            claimName: jellyfin-config-pvc
+        - name: tvshows-vol
+          nfs:
+            server: 192.168.2.252
+            path: "/mnt/tank/nfs/Tv"
+            readOnly: true
+        - name: tvshows-temp-vol
+          nfs:
+            server: 192.168.2.252
+            path: "/mnt/tank/nfs/Temp/Tv"
+            readOnly: true
+        - name: movies-vol
+          nfs:
+            server: 192.168.2.252
+            path: "/mnt/tank/nfs/Movies"
+            readOnly: true
+        - name: movies-temp-vol
+          nfs:
+            server: 192.168.2.252
+            path: "/mnt/tank/nfs/Temp/Movies"
+            readOnly: true
+        - name: music-vol
+          nfs:
+            server: 192.168.2.252
+            path: "/mnt/tank/nfs/Music"
+            readOnly: true

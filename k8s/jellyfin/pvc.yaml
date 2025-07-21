@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-config-pvc
+  namespace: jelly
+spec:
+  storageClassName: longhorn-xfs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 7Gi
