@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bookstack-gateway
+  namespace: bookstack-dmz
+spec:
+  parentRefs:
+  - name: gateway-external
+    namespace: gateway
+    sectionName: koryalbert-net
+  hostnames:
+  - "kb.koryalbert.net"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: bookstack
+      port: 80
