@@ -29,7 +29,7 @@ spec:
       hostNetwork: true  # Required for UDP port ranges
       containers:
       - name: ispyagentdvr
-        image: mekayelanik/ispyagentdvr:latest
+        image: mekayelanik/ispyagentdvr:6.3.3.0-21042025
         envFrom:
         - configMapRef:
             name: agentdvr-config
