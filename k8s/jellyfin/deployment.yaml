@@ -45,12 +45,8 @@ spec:
               name: config-vol
             - mountPath: /data/tvshows
               name: tvshows-vol
-            - mountPath: /data/tvshows-temp
-              name: tvshows-temp-vol
             - mountPath: /data/movies
               name: movies-vol
-            - mountPath: /data/movies-temp
-              name: movies-temp-vol
             - mountPath: /data/music
               name: music-vol
           resources:
@@ -71,26 +67,16 @@ spec:
             claimName: jellyfin-config-pvc
         - name: tvshows-vol
           nfs:
-            server: 192.168.2.252
-            path: "/mnt/tank/nfs/Tv"
-            readOnly: true
-        - name: tvshows-temp-vol
-          nfs:
-            server: 192.168.2.252
-            path: "/mnt/tank/nfs/Temp/Tv"
+            server: 192.168.2.244
+            path: "/mnt/media/files/Tv"
             readOnly: true
         - name: movies-vol
           nfs:
-            server: 192.168.2.252
-            path: "/mnt/tank/nfs/Movies"
-            readOnly: true
-        - name: movies-temp-vol
-          nfs:
-            server: 192.168.2.252
-            path: "/mnt/tank/nfs/Temp/Movies"
+            server: 192.168.2.244
+            path: "/mnt/media/files/Movies"
             readOnly: true
         - name: music-vol
           nfs:
-            server: 192.168.2.252
-            path: "/mnt/tank/nfs/Music"
+            server: 192.168.2.244
+            path: "/mnt/media/files/Music"
             readOnly: true

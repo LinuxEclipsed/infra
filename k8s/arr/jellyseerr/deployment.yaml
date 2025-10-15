@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyseerr
+  namespace: arr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyseerr
+  template:
+    metadata:
+      labels:
+        app: jellyseerr
+    spec:
+      containers:
+      - name: jellyseerr
+        image: fallenbagel/jellyseerr:2.5.2
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "America/Los_Angeles"
+        volumeMounts:
+        - mountPath: /app/config
+          name: jellyseerr-data
+        ports:
+        - containerPort: 5055
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5055
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5055
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+      volumes:
+      - name: jellyseerr-data
+        persistentVolumeClaim:
+          claimName: jellyseerr-data-pvc

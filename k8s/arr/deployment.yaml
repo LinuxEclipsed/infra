@@ -55,12 +55,12 @@ spec:
           claimName: sonarr-data-pvc
       - name: tvseries
         nfs:
-          server: 192.168.2.252
-          path: /mnt/tank/nfs/Temp/Tv
+          server: 192.168.2.244
+          path: /mnt/media/files/Tv
       - name: downloads
         nfs:
-          server: 192.168.2.252
-          path: /mnt/Junk/Download
+          server: 192.168.2.244
+          path: /mnt/media/files/Downloads
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -171,12 +171,12 @@ spec:
           claimName: radarr-data-pvc
       - name: movies
         nfs:
-          server: 192.168.2.252
-          path: /mnt/tank/nfs/Temp/Movies
+          server: 192.168.2.244
+          path: /mnt/media/files/Movies
       - name: downloads
         nfs:
-          server: 192.168.2.252
-          path: /mnt/Junk/Download
+          server: 192.168.2.244
+          path: /mnt/media/files/Downloads
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -235,64 +235,12 @@ spec:
           claimName: lidarr-data-pvc
       - name: music
         nfs:
-          server: 192.168.2.252
+          server: 192.168.2.244
           path: /mnt/tank/nfs/Music
       - name: downloads
         nfs:
-          server: 192.168.2.252
-          path: /mnt/Junk/Download
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: jellyseerr
-  namespace: arr
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: jellyseerr
-  template:
-    metadata:
-      labels:
-        app: jellyseerr
-    spec:
-      containers:
-      - name: jellyseerr
-        image: fallenbagel/jellyseerr:2.5.2
-        imagePullPolicy: IfNotPresent
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: TZ
-          value: "America/Los_Angeles"
-        volumeMounts:
-        - mountPath: /app/config
-          name: jellyseerr-data
-        ports:
-        - containerPort: 5055
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 5055
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 5055
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-      volumes:
-      - name: jellyseerr-data
-        persistentVolumeClaim:
-          claimName: jellyseerr-data-pvc
+          server: 192.168.2.244
+          path: /mnt/media/files/Downloads
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -335,12 +283,12 @@ spec:
           claimName: readarr-config-pvc
       - name: books
         nfs:
-          server: 192.168.2.252
-          path: /mnt/tank/nfs/Temp/Books
+          server: 192.168.2.244
+          path: /mnt/media/files/Books
       - name: downloads
         nfs:
-          server: 192.168.2.252
-          path: /mnt/Junk/Download
+          server: 192.168.2.244
+          path: /mnt/media/files/Downloads
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -376,78 +324,11 @@ spec:
       volumes:
       - name: audiobooks
         nfs:
-          server: 192.168.2.252
-          path: /mnt/tank/nfs/Temp/Books
+          server: 192.168.2.244
+          path: /mnt/media/files/Books
       - name: config
         persistentVolumeClaim:
           claimName: audiobookshelf-config-pvc
       - name: metadata
         persistentVolumeClaim:
           claimName: audiobookshelf-metadata-pvc
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bazarr
-  namespace: arr
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: bazarr
-  template:
-    metadata:
-      labels:
-        app: bazarr
-    spec:
-      containers:
-      - name: bazarr
-        image: lscr.io/linuxserver/bazarr:latest
-        ports:
-        - containerPort: 6767
-        env:
-        - name: TZ
-          value: "America/Los_Angeles"
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        volumeMounts:
-        - name: movies
-          mountPath: /movies
-        - name: config
-          mountPath: /config
-        - name: tv
-          mountPath: /tv
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 6767
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 6767
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        resources:
-          requests:
-            memory: "210Mi"
-            cpu: "100m"
-      volumes:
-      - name: movies
-        nfs:
-          server: 192.168.2.252
-          path: /mnt/tank/nfs/Temp/Movies
-      - name: config
-        persistentVolumeClaim:
-          claimName: bazarr-config-pvc
-      - name: tv
-        nfs:
-          server: 192.168.2.252
-          path: /mnt/tank/nfs/Temp/Tv
