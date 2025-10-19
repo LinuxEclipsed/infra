@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lidarr
+  namespace: arr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lidarr
+  template:
+    metadata:
+      labels:
+        app: lidarr
+    spec:
+      containers:
+      - name: lidarr
+        image: lscr.io/linuxserver/lidarr:2.9.6
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "America/Los_Angeles"
+        volumeMounts:
+        - mountPath: /config
+          name: lidarr-data
+        - mountPath: /music
+          name: music
+        - mountPath: /downloads
+          name: downloads
+        ports:
+        - containerPort: 8686
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8686
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8686
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+      volumes:
+      - name: lidarr-data
+        persistentVolumeClaim:
+          claimName: lidarr-data-pvc
+      - name: music
+        nfs:
+          server: 192.168.2.244
+          path: /mnt/tank/nfs/Music
+      - name: downloads
+        nfs:
+          server: 192.168.2.244
+          path: /mnt/media/files/Downloads
