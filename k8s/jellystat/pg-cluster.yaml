@@ -4,7 +4,7 @@ metadata:
   name: pgcluster-jellystat
   namespace: jelly
 spec:
-  instances: 2
+  instances: 1
   primaryUpdateStrategy: unsupervised
   bootstrap:
     initdb:
@@ -24,4 +24,4 @@ spec:
     topologyKey: kubernetes.io/hostname
   storage:
     storageClass: longhorn-xfs-1rep
-    size: 2Gi
+    size: 4Gi
