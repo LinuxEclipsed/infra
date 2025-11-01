@@ -67,16 +67,16 @@ spec:
             claimName: jellyfin-config-pvc
         - name: tvshows-vol
           nfs:
-            server: 192.168.2.244
-            path: "/mnt/media/files/Tv"
+            server: 192.168.2.254
+            path: "/mnt/tank/media/Tv"
             readOnly: true
         - name: movies-vol
           nfs:
-            server: 192.168.2.244
-            path: "/mnt/media/files/Movies"
+            server: 192.168.2.254
+            path: "/mnt/tank/media/Movies"
             readOnly: true
         - name: music-vol
           nfs:
-            server: 192.168.2.244
-            path: "/mnt/media/files/Music"
+            server: 192.168.2.254
+            path: "/mnt/tank/media/Music"
             readOnly: true

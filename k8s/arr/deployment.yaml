@@ -55,12 +55,12 @@ spec:
           claimName: sonarr-data-pvc
       - name: tvseries
         nfs:
-          server: 192.168.2.244
-          path: /mnt/media/files/Tv
+          server: 192.168.2.254
+          path: /mnt/tank/media/Tv
       - name: downloads
         nfs:
-          server: 192.168.2.244
-          path: /mnt/media/files/Downloads
+          server: 192.168.2.254
+          path: /mnt/tank/downloads
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -171,12 +171,12 @@ spec:
           claimName: radarr-data-pvc
       - name: movies
         nfs:
-          server: 192.168.2.244
-          path: /mnt/media/files/Movies
+          server: 192.168.2.254
+          path: /mnt/tank/media/Movies
       - name: downloads
         nfs:
-          server: 192.168.2.244
-          path: /mnt/media/files/Downloads
+          server: 192.168.2.254
+          path: /mnt/tank/downloads
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -219,12 +219,12 @@ spec:
           claimName: readarr-config-pvc
       - name: books
         nfs:
-          server: 192.168.2.244
-          path: /mnt/media/files/Books
+          server: 192.168.2.254
+          path: /mnt/tank/media/Books
       - name: downloads
         nfs:
-          server: 192.168.2.244
-          path: /mnt/media/files/Downloads
+          server: 192.168.2.254
+          path: /mnt/tank/downloads
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -260,8 +260,8 @@ spec:
       volumes:
       - name: audiobooks
         nfs:
-          server: 192.168.2.244
-          path: /mnt/media/files/Books
+          server: 192.168.2.254
+          path: /mnt/tank/media/Books
       - name: config
         persistentVolumeClaim:
           claimName: audiobookshelf-config-pvc

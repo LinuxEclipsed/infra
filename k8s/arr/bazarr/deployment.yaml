@@ -55,12 +55,12 @@ spec:
       volumes:
       - name: movies
         nfs:
-          server: 192.168.2.244
-          path: /mnt/media/files/Movies
+          server: 192.168.2.254
+          path: /mnt/tank/media/Movies
       - name: config
         persistentVolumeClaim:
           claimName: bazarr-config-pvc
       - name: tv
         nfs:
-          server: 192.168.2.244
-          path: /mnt/media/files/Tv
+          server: 192.168.2.254
+          path: /mnt/tank/media/Tv
