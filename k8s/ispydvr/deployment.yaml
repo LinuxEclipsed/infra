@@ -50,5 +50,5 @@ spec:
           claimName: ispyagentdvr-config-pvc
       - name: media-volume
         nfs:
-          server: 192.168.2.252
+          server: 192.168.2.254
           path:  /mnt/tank/dvr
