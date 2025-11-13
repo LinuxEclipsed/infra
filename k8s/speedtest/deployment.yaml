@@ -75,4 +75,4 @@ spec:
       volumes:
         - name: speedtest-tracker
           persistentVolumeClaim:
-            claimName: speedtest-app-pvc
+            claimName: speedtest-app-nfs-pvc

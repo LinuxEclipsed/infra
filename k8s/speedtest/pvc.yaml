@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: speedtest-app-pvc
+  name: speedtest-app-nfs-pvc
   namespace: speedtest
 spec:
-  storageClassName: longhorn
-  volumeName: speedtest-app
+  storageClassName: nfs-client
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 100Mi
@@ -15,13 +14,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: speedtest-db-pvc
+  name: speedtest-db-nfs-pvc
   namespace: speedtest
 spec:
-  storageClassName: longhorn
-  volumeName: speedtest-db
+  storageClassName: nfs-client
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 100Mi
