@@ -66,4 +66,4 @@ spec:
       volumes:
         - name: jellystat-data
           persistentVolumeClaim:
-            claimName: jellystat-data-pvc
+            claimName: jellystat-pvc

@@ -46,4 +46,4 @@ spec:
       volumes:
         - name: cookbook-db-data
           persistentVolumeClaim:
-            claimName: cookbook-db-pvc
+            claimName: cookbook-db-nfs-pvc

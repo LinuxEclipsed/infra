@@ -88,7 +88,7 @@ spec:
       volumes:
         - name: cookbook-config
           persistentVolumeClaim:
-            claimName: cookbook-app-pvc
+            claimName: cookbook-app-nfs-pvc
         - name: nginx-config
           configMap:
             name: cookbook-configmap
@@ -134,7 +134,7 @@ spec:
       volumes:
         - name: cookbook-config
           persistentVolumeClaim:
-            claimName: cookbook-app-pvc
+            claimName: cookbook-app-nfs-pvc
         - name: nginx-config
           configMap:
             name: cookbook-configmap
