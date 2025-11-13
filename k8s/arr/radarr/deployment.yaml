@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jellyseerr
+  name: radarr
   namespace: arr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: jellyseerr
+      app: radarr
   template:
     metadata:
       labels:
-        app: jellyseerr
+        app: radarr
     spec:
       containers:
-      - name: jellyseerr
-        image: fallenbagel/jellyseerr:2.5.2
+      - name: radarr
+        image: lscr.io/linuxserver/radarr:5.22.4
         imagePullPolicy: IfNotPresent
         env:
         - name: PUID
@@ -25,14 +25,18 @@ spec:
         - name: TZ
           value: "America/Los_Angeles"
         volumeMounts:
-        - mountPath: /app/config
-          name: jellyseerr-data
+        - mountPath: /config
+          name: radarr-data
+        - mountPath: /tv
+          name: movies
+        - mountPath: /downloads
+          name: downloads
         ports:
-        - containerPort: 5055
+        - containerPort: 7878
         livenessProbe:
           httpGet:
             path: /
-            port: 5055
+            port: 7878
           initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 5
@@ -40,12 +44,20 @@ spec:
         readinessProbe:
           httpGet:
             path: /
-            port: 5055
+            port: 7878
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
       volumes:
-      - name: jellyseerr-data
+      - name: radarr-data
         persistentVolumeClaim:
-          claimName: jellyseerr-data-nfs-pvc
+          claimName: radarr-data-nfs-pvc
+      - name: movies
+        nfs:
+          server: 192.168.2.254
+          path: /mnt/tank/media/Movies
+      - name: downloads
+        nfs:
+          server: 192.168.2.254
+          path: /mnt/tank/downloads

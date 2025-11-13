@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: bazarr-config-nfs-pvc
+  name: prowlarr-data-nfs-pvc
   namespace: arr
 spec:
   accessModes:
     - ReadWriteMany
+  storageClassName: nfs-client
   resources:
     requests:
-      storage: 1Gi
-  storageClassName: nfs-client
+      storage: 2Gi

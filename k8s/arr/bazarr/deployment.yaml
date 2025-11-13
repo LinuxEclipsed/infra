@@ -59,7 +59,7 @@ spec:
           path: /mnt/tank/media/Movies
       - name: config
         persistentVolumeClaim:
-          claimName: bazarr-config-pvc
+          claimName: bazarr-config-nfs-pvc
       - name: tv
         nfs:
           server: 192.168.2.254

@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jellyseerr
+  name: prowlarr
   namespace: arr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: jellyseerr
+      app: prowlarr
   template:
     metadata:
       labels:
-        app: jellyseerr
+        app: prowlarr
     spec:
       containers:
-      - name: jellyseerr
-        image: fallenbagel/jellyseerr:2.5.2
+      - name: prowlarr
+        image: lscr.io/linuxserver/prowlarr:1.35.1
         imagePullPolicy: IfNotPresent
         env:
         - name: PUID
@@ -25,14 +25,14 @@ spec:
         - name: TZ
           value: "America/Los_Angeles"
         volumeMounts:
-        - mountPath: /app/config
-          name: jellyseerr-data
+        - mountPath: /config
+          name: prowlarr-data
         ports:
-        - containerPort: 5055
+        - containerPort: 9696
         livenessProbe:
           httpGet:
             path: /
-            port: 5055
+            port: 9696
           initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 5
@@ -40,12 +40,12 @@ spec:
         readinessProbe:
           httpGet:
             path: /
-            port: 5055
+            port: 9696
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
       volumes:
-      - name: jellyseerr-data
+      - name: prowlarr-data
         persistentVolumeClaim:
-          claimName: jellyseerr-data-nfs-pvc
+          claimName: prowlarr-data-nfs-pvc

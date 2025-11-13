@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jellyseerr
+  name: sonarr
   namespace: arr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: jellyseerr
+      app: sonarr
   template:
     metadata:
       labels:
-        app: jellyseerr
+        app: sonarr
     spec:
       containers:
-      - name: jellyseerr
-        image: fallenbagel/jellyseerr:2.5.2
+      - name: sonarr
+        image: lscr.io/linuxserver/sonarr:4.0.14
         imagePullPolicy: IfNotPresent
         env:
         - name: PUID
@@ -25,14 +25,18 @@ spec:
         - name: TZ
           value: "America/Los_Angeles"
         volumeMounts:
-        - mountPath: /app/config
-          name: jellyseerr-data
+        - mountPath: /config
+          name: sonarr-data
+        - mountPath: /tv
+          name: tvseries
+        - mountPath: /downloads
+          name: downloads
         ports:
-        - containerPort: 5055
+        - containerPort: 8989
         livenessProbe:
           httpGet:
             path: /
-            port: 5055
+            port: 8989
           initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 5
@@ -40,12 +44,20 @@ spec:
         readinessProbe:
           httpGet:
             path: /
-            port: 5055
+            port: 8989
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
       volumes:
-      - name: jellyseerr-data
+      - name: sonarr-data
         persistentVolumeClaim:
-          claimName: jellyseerr-data-nfs-pvc
+          claimName: sonarr-data-nfs-pvc
+      - name: tvseries
+        nfs:
+          server: 192.168.2.254
+          path: /mnt/tank/media/Tv
+      - name: downloads
+        nfs:
+          server: 192.168.2.254
+          path: /mnt/tank/downloads

@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jellyseerr-data-pvc
+  name: jellyseerr-data-nfs-pvc
   namespace: arr
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: longhorn
+  storageClassName: nfs-client
   resources:
     requests:
       storage: 100Mi
