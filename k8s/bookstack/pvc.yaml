@@ -1,11 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: bookstack-db-pvc
+  name: bookstack-db-nfs-pvc
   namespace: bookstack-dmz
 spec:
-  storageClassName: longhorn
-  volumeName: bookstack-db
+  storageClassName: nfs-client
   accessModes:
     - ReadWriteMany
   resources:
@@ -15,11 +14,10 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: bookstack-app-pvc
+  name: bookstack-app-nfs-pvc
   namespace: bookstack-dmz
 spec:
-  storageClassName: longhorn
-  volumeName: bookstack-app
+  storageClassName: nfs-client
   accessModes:
     - ReadWriteMany
   resources:

@@ -10,3 +10,16 @@ spec:
   resources:
     requests:
       storage: 15Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-config-nfs-pvc
+  namespace: jelly
+spec:
+  storageClassName: nfs-client
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 15Gi

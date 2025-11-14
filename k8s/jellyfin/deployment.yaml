@@ -64,7 +64,7 @@ spec:
       volumes:
         - name: config-vol
           persistentVolumeClaim:
-            claimName: jellyfin-config-pvc
+            claimName: jellyfin-config-nfs-pvc
         - name: tvshows-vol
           nfs:
             server: 192.168.2.254

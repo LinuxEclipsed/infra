@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ispyagentdvr-config-pvc
+  name: ispyagentdvr-config-nfs-pvc
   namespace: dvr
 spec:
-  storageClassName: longhorn
+  storageClassName: nfs-client
   accessModes:
     - ReadWriteMany
   resources:

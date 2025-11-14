@@ -31,24 +31,28 @@ spec:
           ports:
             - containerPort: 3306
               name: mysql
-#          livenessProbe:
-#            initialDelaySeconds: 20
-#            periodSeconds: 5
-#            # One second longer than command timeout should prevent generation of zombie processes.
-#            timeoutSeconds: 6
-#            successThreshold: 1
-#            failureThreshold: 5
-#          readinessProbe:
-#            initialDelaySeconds: 20
-#            periodSeconds: 5
-#            timeoutSeconds: 2
-#            successThreshold: 1
-#            failureThreshold: 5
-#            exec:
-#              command:
-#                - sh
-#                - -c
-#                - /health/ping_readiness_local.sh 1
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" | grep 'mysqld is alive'
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" | grep 'mysqld is alive'
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
           resources:
             limits: {}
             requests:
@@ -60,4 +64,4 @@ spec:
       volumes:
         - name: mysql-data
           persistentVolumeClaim:
-            claimName: ghost-db-pvc
+            claimName: ghost-db-nfs-pvc

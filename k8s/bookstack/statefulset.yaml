@@ -17,15 +17,6 @@ spec:
       labels:
         app: mariadb
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: location
-                    operator: NotIn
-                    values:
-                      - local
       terminationGracePeriodSeconds: 30
       containers:
         - name: mariadb
@@ -53,4 +44,4 @@ spec:
       volumes:
         - name: mariadb-data
           persistentVolumeClaim:
-            claimName: bookstack-db-pvc
+            claimName: bookstack-db-nfs-pvc

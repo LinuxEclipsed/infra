@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ghost-app-pvc
+  name: ghost-app-nfs-pvc
   namespace: ghost-dmz
 spec:
-  storageClassName: longhorn
-  volumeName: ghost-app
+  storageClassName: nfs-client
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 100Mi
@@ -15,13 +14,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ghost-db-pvc
+  name: ghost-db-nfs-pvc
   namespace: ghost-dmz
 spec:
-  storageClassName: longhorn
-  volumeName: ghost-db
+  storageClassName: nfs-client
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 500Mi
