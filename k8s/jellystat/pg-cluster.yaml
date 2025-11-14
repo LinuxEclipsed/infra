@@ -23,5 +23,5 @@ spec:
     podAntiAffinityType: preferred
     topologyKey: kubernetes.io/hostname
   storage:
-    storageClass: longhorn-xfs-1rep
+    storageClass: nfs-client
     size: 4Gi
