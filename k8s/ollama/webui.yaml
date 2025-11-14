@@ -13,28 +13,21 @@ spec:
       labels:
         name: webui
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: gpu
-                operator: In
-                values:
-                  - "true"
-      volumes:
-      - name: webui-storage
-        persistentVolumeClaim:
-            claimName: webui-storage-pvc
+     # volumes:
+     # - name: webui-storage
+     #   persistentVolumeClaim:
+     #       claimName: webui-storage-pvc
       containers:
         - name: webui
           image: ghcr.io/open-webui/open-webui:main
-          volumeMounts:
-          - mountPath: /app/backend/data
-            name: webui-storage
+       #   volumeMounts:
+        #  - mountPath: /app/backend/data
+         #   name: webui-storage
           env:
             - name: OLLAMA_BASE_URLS
               value: "http://ollama"
+            - name: WEBUI_AUTH
+              value: "False"
           ports:
             - name: http
               containerPort: 8080
